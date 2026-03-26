@@ -36,7 +36,7 @@
             </h1>
             <div class="flex items-center gap-3">
                 <span class="hidden md:inline text-xs text-slate-500 font-medium uppercase tracking-widest">Fleet Management System</span>
-                <span class="bg-red-500/10 text-red-400 text-[10px] md:text-xs px-2.5 py-1 rounded-full font-mono border border-red-500/20 shadow-lg shadow-red-500/5">v1.0.7</span>
+                <span class="bg-red-500/10 text-red-400 text-[10px] md:text-xs px-2.5 py-1 rounded-full font-mono border border-red-500/20 shadow-lg shadow-red-500/5">v1.0.9</span>
             </div>
         </div>
     </header>
@@ -84,7 +84,6 @@
 
             <div class="bg-slate-900/50 border border-slate-800 p-4 md:p-8 rounded-3xl shadow-2xl space-y-6">
                 
-                <!-- Rząd 1: Firma i LEO (Responsive Grid) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
                         <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Klient / Zleceniodawca</label>
@@ -102,7 +101,6 @@
                     </div>
                 </div>
 
-                <!-- Rząd 2: Spedytor i Trasa -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="md:col-span-1 space-y-1.5">
                         <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Spedytor</label>
@@ -120,7 +118,6 @@
                     </div>
                 </div>
 
-                <!-- Rząd 3: KM i Cena -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1.5">
                         <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Dystans Całkowity</label>
@@ -140,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Sekcja Opcjonalna (Ładunek) -->
                 <div class="pt-6 border-t border-slate-800/50">
                     <button type="button" onclick="document.getElementById('loadDetails').classList.toggle('hidden')" 
                         class="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-2 hover:text-blue-400 transition-colors">
@@ -178,15 +174,14 @@
 
     </main>
 
-    <!-- Footer / Info -->
     <footer class="max-w-4xl mx-auto p-8 text-center space-y-2">
         <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest italic">Optimization over frustration</p>
     </footer>
 
     <script>
+        // WEBHOOK URL ZAKTUALIZOWANY
         const N8N_WEBHOOK_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook/f-ckspedtrans-data';
 
-        // Generowanie listy LEO001 - LEO178
         const select = document.getElementById('leoCode');
         for(let i=1; i<=178; i++) {
             const code = `LEO${i.toString().padStart(3, '0')}`;
@@ -196,7 +191,6 @@
             select.appendChild(opt);
         }
 
-        // Obsługa statusu plików
         const updateStatus = () => {
             const camFile = document.getElementById('cameraInput').files[0];
             const regFile = document.getElementById('fileInput').files[0];
@@ -226,7 +220,7 @@
             
             btn.disabled = true;
             btn.classList.replace('bg-blue-600', 'bg-slate-700');
-            btnText.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> PRZETWARZANIE...`;
+            btnText.innerHTML = `PRZETWARZANIE...`;
 
             const formData = new FormData();
             if(camFile) formData.append('photo', camFile);
@@ -247,6 +241,7 @@
             try {
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
+                    mode: 'cors',
                     body: formData
                 });
 
@@ -255,10 +250,12 @@
                     btnText.innerText = 'SUKCES! POSZŁO';
                     setTimeout(() => location.reload(), 1500);
                 } else {
-                    throw new Error('Serwer odrzucił połączenie');
+                    const errorText = await response.text();
+                    throw new Error(`Błąd ${response.status}: ${errorText || 'Serwer nie odpowiedział'}`);
                 }
             } catch (error) {
-                alert('BŁĄD: ' + error.message);
+                console.error('Błąd:', error);
+                alert('BŁĄD: ' + error.message + '\n\nUpewnij się, że w n8n masz aktywny workflow i Production URL.');
                 btn.disabled = false;
                 btn.classList.replace('bg-slate-700', 'bg-blue-600');
                 btnText.innerText = 'Spróbuj ponownie';
