@@ -3,262 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>F$CKSPEDTRANS v1</title>
+    <title>F$CKSPEDTRANS v1.1.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
         body { 
             font-family: 'Inter', sans-serif; 
+            background-color: #020617;
             -webkit-tap-highlight-color: transparent;
         }
         .glass {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
         }
-        input:focus, select:focus {
-            outline: 2px solid #3b82f6;
-            outline-offset: -2px;
+        .input-glow:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="text-slate-100 min-h-screen pb-10">
 
-    <!-- Header -->
-    <header class="p-4 md:p-6 bg-slate-900/50 border-b border-slate-800 sticky top-0 z-50 glass">
+    <!-- Status Bar -->
+    <div class="bg-blue-600/20 text-[10px] text-center py-1.5 font-bold uppercase tracking-[0.3em] text-blue-400 border-b border-blue-500/20">
+        <span class="animate-pulse-slow">System Gotowy • Vercel Deployment</span>
+    </div>
+
+    <header class="p-4 md:p-6 border-b border-slate-800 sticky top-0 z-50 glass shadow-2xl">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <h1 class="text-xl md:text-2xl font-extrabold tracking-tighter text-blue-500 uppercase italic">
-                F$CKSPED<span class="text-white">TRANS</span>
+                F$CKSPED<span class="text-white text-shadow-glow">TRANS</span>
             </h1>
             <div class="flex items-center gap-3">
-                <span class="hidden md:inline text-xs text-slate-500 font-medium uppercase tracking-widest">Fleet Management System</span>
-                <span class="bg-red-500/10 text-red-400 text-[10px] md:text-xs px-2.5 py-1 rounded-full font-mono border border-red-500/20 shadow-lg shadow-red-500/5">v1.0.9</span>
+                <div id="rateDisplay" class="hidden sm:flex bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 items-center gap-2">
+                    <span class="text-[9px] uppercase text-slate-500 font-bold">Rate:</span>
+                    <span id="liveRate" class="font-mono text-xs">--</span>
+                </div>
+                <span class="bg-red-500/10 text-red-400 text-[10px] px-2 py-1 rounded-full border border-red-500/20 font-mono shadow-lg shadow-red-500/5">v1.1.7</span>
             </div>
         </div>
     </header>
 
     <main class="max-w-4xl mx-auto p-4 md:p-8 space-y-8">
         
-        <!-- Sekcja Załączników -->
+        <!-- Sekcja 1: Dokumenty -->
         <section class="space-y-4">
-            <div class="flex items-center gap-2 px-1">
-                <div class="h-4 w-1 bg-blue-500 rounded-full"></div>
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">1. Dokumentacja</h2>
+            <div class="flex items-center justify-between px-1">
+                <div class="flex items-center gap-2">
+                    <div class="h-4 w-1 bg-blue-500 rounded-full"></div>
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">1. Dokumentacja</h2>
+                </div>
+                <span class="text-[9px] text-slate-600 uppercase font-black">Opcjonalnie</span>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Zrób Zdjęcie -->
-                <div class="relative group h-32 md:h-40">
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" 
-                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
-                    <div id="cameraBox" class="bg-slate-900 border-2 border-dashed border-slate-700 rounded-2xl p-4 text-center group-hover:border-blue-500 group-hover:bg-slate-800/50 transition-all h-full flex flex-col items-center justify-center">
-                        <div class="text-3xl md:text-4xl mb-2">📸</div>
-                        <p class="text-xs md:text-sm text-slate-300 font-bold uppercase tracking-tight">Zrób zdjęcie karty</p>
-                        <p class="text-[10px] text-slate-500 mt-1 uppercase">Użyj aparatu</p>
-                    </div>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Aparat -->
+                <div class="relative group h-32 bg-slate-900 border-2 border-dashed border-slate-700 rounded-2xl flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition-all active:scale-95 shadow-xl">
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="absolute inset-0 opacity-0 cursor-pointer z-20">
+                    <div id="cameraIcon" class="text-3xl mb-1 transition-transform group-hover:scale-110">📸</div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 group-hover:text-blue-400">Zrób zdjęcie</p>
                 </div>
-                <!-- Dodaj Plik -->
-                <div class="relative group h-32 md:h-40">
-                    <input type="file" id="fileInput" accept="image/*,application/pdf" 
-                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
-                    <div id="fileBox" class="bg-slate-900 border-2 border-dashed border-slate-700 rounded-2xl p-4 text-center group-hover:border-blue-500 group-hover:bg-slate-800/50 transition-all h-full flex flex-col items-center justify-center">
-                        <div class="text-3xl md:text-4xl mb-2">📄</div>
-                        <p class="text-xs md:text-sm text-slate-300 font-bold uppercase tracking-tight">Dodaj PDF / Order</p>
-                        <p class="text-[10px] text-slate-500 mt-1 uppercase">Z pamięci urządzenia</p>
-                    </div>
+                <!-- PDF -->
+                <div class="relative group h-32 bg-slate-900 border-2 border-dashed border-slate-700 rounded-2xl flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition-all active:scale-95 shadow-xl">
+                    <input type="file" id="fileInput" accept="image/*,application/pdf" class="absolute inset-0 opacity-0 cursor-pointer z-20">
+                    <div id="fileIcon" class="text-3xl mb-1 transition-transform group-hover:scale-110">📄</div>
+                    <p class="text-[10px] font-black uppercase text-slate-400 group-hover:text-blue-400">Dodaj PDF</p>
                 </div>
             </div>
-            <p id="fileStatus" class="text-center text-xs text-blue-400 font-medium italic hidden bg-blue-500/5 py-2 rounded-lg border border-blue-500/10"></p>
+            <div id="fileStatus" class="hidden text-center text-[10px] text-blue-400 font-mono font-bold bg-blue-500/5 py-3 rounded-xl border border-blue-500/20 animate-in fade-in zoom-in"></div>
         </section>
 
-        <!-- Formularz Danych -->
+        <!-- Sekcja 2: Formularz -->
         <section class="space-y-4">
             <div class="flex items-center gap-2 px-1">
                 <div class="h-4 w-1 bg-blue-500 rounded-full"></div>
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">2. Dane operacyjne</h2>
             </div>
 
-            <div class="bg-slate-900/50 border border-slate-800 p-4 md:p-8 rounded-3xl shadow-2xl space-y-6">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Klient / Zleceniodawca</label>
-                        <input type="text" id="firma" placeholder="Wpisz nazwę firmy" 
-                            class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-medium text-white transition-all focus:bg-slate-800/50">
+            <div class="bg-slate-900/50 border border-slate-800 p-6 md:p-10 rounded-[2.5rem] space-y-6 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="white"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM18 17h-1.07c-.45-.88-1.36-1.5-2.43-1.5s-1.98.62-2.43 1.5H9.07c-.45-.88-1.36-1.5-2.43-1.5s-1.98.62-2.43 1.5H3V6h14v5h3l2.29 3H18v3z"/></svg>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Firma / Klient</label>
+                        <input type="text" id="firma" placeholder="Nazwa firmy" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl outline-none transition-all input-glow text-white font-semibold">
                     </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Pojazd LEO</label>
-                        <div class="relative">
-                            <select id="leoCode" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl appearance-none font-medium text-white transition-all focus:bg-slate-800/50">
-                                <option value="" disabled selected>Wybierz numer...</option>
-                            </select>
-                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500 text-xs">▼</div>
-                        </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-blue-500 uppercase tracking-widest ml-1 font-mono text-shadow-glow">Pojazd LEO</label>
+                        <select id="leoCode" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl outline-none transition-all input-glow text-white font-bold appearance-none cursor-pointer">
+                            <option value="" disabled selected>Wybierz auto...</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-1 space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Spedytor</label>
-                        <input type="text" id="spedytor" placeholder="Np. Stół 7" 
-                            class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-medium">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Kod Pocztowy (Start)</label>
+                        <input type="text" id="kodStart" placeholder="00-000" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl text-center font-mono outline-none input-glow font-bold">
                     </div>
-                    <div class="md:col-span-2 space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Relacja (Kody Pocztowe)</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="kodStart" placeholder="Kod Start" maxlength="6"
-                                class="bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-mono text-center">
-                            <input type="text" id="kodKoniec" placeholder="Kod Koniec" maxlength="6"
-                                class="bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-mono text-center">
-                        </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Kod Pocztowy (Koniec)</label>
+                        <input type="text" id="kodKoniec" placeholder="00-000" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl text-center font-mono outline-none input-glow font-bold">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Dystans Całkowity</label>
-                        <div class="relative">
-                            <input type="number" id="km" placeholder="0" 
-                                class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-bold text-lg">
-                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-600 uppercase">KM</span>
-                        </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest ml-1">Dystans Razem (Km)</label>
+                        <input type="number" id="km" placeholder="0" oninput="calcRate()" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl font-black text-xl outline-none input-glow text-blue-400">
                     </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Stawka</label>
-                        <div class="relative">
-                            <input type="number" id="cena" placeholder="0" 
-                                class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl placeholder:text-slate-600 font-bold text-lg text-green-400">
-                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-600 uppercase">EUR</span>
-                        </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-green-500 uppercase tracking-widest ml-1">Stawka Całość (Eur)</label>
+                        <input type="number" id="cena" placeholder="0" oninput="calcRate()" class="w-full bg-slate-800/80 border border-slate-700 p-4 rounded-2xl font-black text-xl outline-none input-glow text-green-400">
                     </div>
                 </div>
 
-                <div class="pt-6 border-t border-slate-800/50">
-                    <button type="button" onclick="document.getElementById('loadDetails').classList.toggle('hidden')" 
-                        class="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-2 hover:text-blue-400 transition-colors">
-                        <span>Szczegóły ładunku (Opcjonalnie)</span>
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    
-                    <div id="loadDetails" class="hidden mt-4 space-y-4 transition-all animate-in fade-in slide-in-from-top-2">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="space-y-1">
-                                <input type="text" id="waga" placeholder="Waga (np. 24t)" 
-                                    class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg text-sm">
-                            </div>
-                            <div class="space-y-1">
-                                <input type="text" id="ilosc" placeholder="Ilość (np. 33 pal)" 
-                                    class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg text-sm">
-                            </div>
-                            <div class="space-y-1">
-                                <input type="text" id="rodzaj" placeholder="Rodzaj towaru" 
-                                    class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg text-sm">
-                            </div>
-                        </div>
+                <!-- Live Rate Info -->
+                <div id="rateBox" class="hidden p-5 rounded-2xl border border-slate-800 bg-slate-950/50 flex justify-between items-center transition-all animate-in zoom-in shadow-inner">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest">Rentowność</span>
+                        <span class="text-[10px] text-slate-400 italic">Cel: 0.77-0.88 EUR/KM</span>
                     </div>
+                    <span id="rateValue" class="text-2xl font-black italic tracking-tighter">-- EUR/KM</span>
                 </div>
             </div>
         </section>
 
-        <!-- Akcja Główna -->
-        <div class="sticky bottom-4 z-40">
-            <button onclick="sendToN8n()" id="sendBtn" 
-                class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-black py-5 md:py-6 rounded-2xl shadow-2xl shadow-blue-500/20 uppercase tracking-[0.2em] text-sm transition-all flex items-center justify-center gap-3 border-t border-blue-400/20">
-                <span id="btnText">Wyślij dane</span>
+        <!-- Przycisk Akcji -->
+        <div class="sticky bottom-4 z-40 px-2 sm:px-0">
+            <button onclick="sendToN8n()" id="sendBtn" class="group w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-6 rounded-[2rem] shadow-[0_20px_40px_rgba(37,99,235,0.3)] uppercase tracking-[0.3em] text-sm transition-all active:scale-95 flex items-center justify-center gap-4 border-t border-blue-400/30">
+                <span id="btnLabel">Wyślij do Agenta AI</span>
+                <svg id="btnIcon" class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
             </button>
         </div>
 
     </main>
 
-    <footer class="max-w-4xl mx-auto p-8 text-center space-y-2">
-        <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest italic">Optimization over frustration</p>
+    <footer class="max-w-4xl mx-auto p-12 text-center space-y-4 opacity-30">
+        <p class="text-[9px] font-black uppercase tracking-[0.5em] italic">Optimization over frustration</p>
+        <div class="flex justify-center gap-4 text-[8px] font-bold text-slate-500 uppercase">
+            <span>Server Response: <span id="serverStatus">Unknown</span></span>
+            <span>Uptime: 99.9%</span>
+        </div>
     </footer>
 
     <script>
-        // WEBHOOK URL ZAKTUALIZOWANY
-        const N8N_WEBHOOK_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook/f-ckspedtrans-data';
+        // TWÓJ WEBHOOK - NIE ZMIENIAJ
+        const N8N_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook/f-ckspedtrans-data';
 
+        // LEO Selection (1-178)
         const select = document.getElementById('leoCode');
         for(let i=1; i<=178; i++) {
             const code = `LEO${i.toString().padStart(3, '0')}`;
-            const opt = document.createElement('option');
-            opt.value = code;
-            opt.innerHTML = code;
-            select.appendChild(opt);
+            select.add(new Option(code, code));
         }
 
-        const updateStatus = () => {
-            const camFile = document.getElementById('cameraInput').files[0];
-            const regFile = document.getElementById('fileInput').files[0];
-            const status = document.getElementById('fileStatus');
-            
-            if(camFile || regFile) {
-                const parts = [];
-                if(camFile) parts.push('ZDJĘCIE');
-                if(regFile) parts.push('PLIK PDF');
+        // Real-time Rate Calculator (thresholds: 0.77 for 3.5t / 0.88 for 7.5t)
+        function calcRate() {
+            const km = parseFloat(document.getElementById('km').value);
+            const cena = parseFloat(document.getElementById('cena').value);
+            const box = document.getElementById('rateBox');
+            const val = document.getElementById('rateValue');
+            const live = document.getElementById('liveRate');
+
+            if(km > 0 && cena > 0) {
+                const rate = (cena / km).toFixed(2);
+                val.innerText = `${rate} EUR/KM`;
+                live.innerText = `${rate} EUR`;
+                box.classList.remove('hidden');
                 
-                status.innerText = `GOTOWE DO WYSŁANIA: ${parts.join(' + ')}`;
-                status.classList.remove('hidden');
-                
-                if(camFile) document.getElementById('cameraBox').classList.add('border-blue-500', 'bg-blue-500/10');
-                if(regFile) document.getElementById('fileBox').classList.add('border-blue-500', 'bg-blue-500/10');
+                // Colors based on user specs
+                if(rate >= 0.88) { 
+                    val.className = 'text-2xl font-black text-green-400 italic';
+                    live.className = 'font-mono text-xs text-green-400';
+                } else if(rate >= 0.77) { 
+                    val.className = 'text-2xl font-black text-blue-400 italic';
+                    live.className = 'font-mono text-xs text-blue-400';
+                } else { 
+                    val.className = 'text-2xl font-black text-red-500 italic';
+                    live.className = 'font-mono text-xs text-red-500';
+                }
+            } else {
+                box.classList.add('hidden');
+                live.innerText = '--';
+            }
+        }
+
+        // File Selection Feedback
+        const statusUpdate = () => {
+            const c = document.getElementById('cameraInput').files[0];
+            const f = document.getElementById('fileInput').files[0];
+            const s = document.getElementById('fileStatus');
+            if(c || f) {
+                s.innerText = `📦 GOTOWE DO WYSŁANIA: ${c ? 'ZDJĘCIE ' : ''}${f ? 'PLIK PDF' : ''}`;
+                s.classList.remove('hidden');
+                if(c) document.getElementById('cameraIcon').innerText = "✅";
+                if(f) document.getElementById('fileIcon').innerText = "✅";
             }
         };
+        document.getElementById('cameraInput').onchange = statusUpdate;
+        document.getElementById('fileInput').onchange = statusUpdate;
 
-        document.getElementById('cameraInput').addEventListener('change', updateStatus);
-        document.getElementById('fileInput').addEventListener('change', updateStatus);
-
+        // Final Submission to n8n
         async function sendToN8n() {
             const btn = document.getElementById('sendBtn');
-            const btnText = document.getElementById('btnText');
-            const camFile = document.getElementById('cameraInput').files[0];
-            const regFile = document.getElementById('fileInput').files[0];
+            const btnLabel = document.getElementById('btnLabel');
+            const btnIcon = document.getElementById('btnIcon');
+            const cam = document.getElementById('cameraInput').files[0];
+            const pdf = document.getElementById('fileInput').files[0];
             
             btn.disabled = true;
-            btn.classList.replace('bg-blue-600', 'bg-slate-700');
-            btnText.innerHTML = `PRZETWARZANIE...`;
+            btn.classList.add('opacity-60', 'cursor-not-allowed');
+            btnLabel.innerText = 'TRWA PRZESYŁANIE...';
+            btnIcon.classList.add('hidden');
 
-            const formData = new FormData();
-            if(camFile) formData.append('photo', camFile);
-            if(regFile) formData.append('order_pdf', regFile);
-            
-            formData.append('firma', document.getElementById('firma').value);
-            formData.append('leo_code', document.getElementById('leoCode').value);
-            formData.append('spedytor', document.getElementById('spedytor').value);
-            formData.append('kod_start', document.getElementById('kodStart').value);
-            formData.append('kod_koniec', document.getElementById('kodKoniec').value);
-            formData.append('km_total', document.getElementById('km').value);
-            formData.append('cena_eur', document.getElementById('cena').value);
-            formData.append('waga', document.getElementById('waga').value);
-            formData.append('ilosc', document.getElementById('ilosc').value);
-            formData.append('rodzaj', document.getElementById('rodzaj').value);
-            formData.append('timestamp', new Date().toISOString());
+            const fd = new FormData();
+            if(cam) fd.append('photo', cam);
+            if(pdf) fd.append('pdf', pdf);
+            fd.append('firma', document.getElementById('firma').value);
+            fd.append('leo', document.getElementById('leoCode').value);
+            fd.append('kod_start', document.getElementById('kodStart').value);
+            fd.append('kod_koniec', document.getElementById('kodKoniec').value);
+            fd.append('km', document.getElementById('km').value);
+            fd.append('cena', document.getElementById('cena').value);
+            fd.append('timestamp', new Date().toISOString());
 
             try {
-                const response = await fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    body: formData
+                const res = await fetch(N8N_URL, { 
+                    method: 'POST', 
+                    body: fd,
+                    // CORS settings
+                    headers: { 'Accept': 'application/json' }
                 });
 
-                if (response.ok) {
-                    btn.classList.replace('bg-slate-700', 'bg-green-600');
-                    btnText.innerText = 'SUKCES! POSZŁO';
-                    setTimeout(() => location.reload(), 1500);
+                if(res.ok) {
+                    btn.classList.replace('bg-blue-600', 'bg-green-600');
+                    btnLabel.innerText = 'SUKCES! ODEBRANO';
+                    document.getElementById('serverStatus').innerText = 'OK (200)';
+                    setTimeout(() => location.reload(), 2000);
                 } else {
-                    const errorText = await response.text();
-                    throw new Error(`Błąd ${response.status}: ${errorText || 'Serwer nie odpowiedział'}`);
+                    const errorText = await res.text();
+                    document.getElementById('serverStatus').innerText = `Error (${res.status})`;
+                    alert(`BŁĄD n8n (${res.status}): ${errorText || 'Webhook nieaktywny'}`);
                 }
-            } catch (error) {
-                console.error('Błąd:', error);
-                alert('BŁĄD: ' + error.message + '\n\nUpewnij się, że w n8n masz aktywny workflow i Production URL.');
+            } catch (e) {
+                console.error(e);
+                alert(`🔴 BŁĄD POŁĄCZENIA!\n\nSprawdź czy w n8n workflow jest włączony (ACTIVE) oraz czy dodałeś nagłówek CORS:\nAccess-Control-Allow-Origin: *`);
+            } finally {
                 btn.disabled = false;
-                btn.classList.replace('bg-slate-700', 'bg-blue-600');
-                btnText.innerText = 'Spróbuj ponownie';
+                btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                btnLabel.innerText = 'Wyślij do Agenta AI';
+                btnIcon.classList.remove('hidden');
             }
         }
     </script>
