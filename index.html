@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>F$CKSPEDTRANS v1.1.10 (Test Mode)</title>
+    <title>F$CKSPEDTRANS v1.1.11</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
@@ -20,12 +20,16 @@
             border-color: #3b82f6;
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
+        .error-border {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.05) !important;
+        }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen pb-10">
 
-    <div class="bg-yellow-500 text-[10px] text-center py-1.5 font-bold uppercase tracking-[0.3em] text-black">
-        Tryb Testowy - n8n Listen for Event
+    <div class="bg-blue-600 text-[10px] text-center py-1.5 font-bold uppercase tracking-[0.3em] text-white">
+        System Operacyjny LEO-TRANS
     </div>
 
     <header class="p-4 md:p-6 border-b border-slate-800 sticky top-0 z-50 glass shadow-2xl">
@@ -38,7 +42,7 @@
                     <span class="text-[9px] uppercase text-slate-500 font-bold tracking-widest">Rate:</span>
                     <span id="liveRate">--</span>
                 </div>
-                <span class="bg-red-500/10 text-red-400 text-[10px] px-2 py-1 rounded-full border border-red-500/20 font-mono">v1.1.10</span>
+                <span class="bg-blue-500/10 text-blue-400 text-[10px] px-2 py-1 rounded-full border border-blue-500/20 font-mono">v1.1.11</span>
             </div>
         </div>
     </header>
@@ -75,11 +79,14 @@
             </div>
 
             <div class="bg-slate-900/50 border border-slate-800 p-6 md:p-8 rounded-3xl space-y-6 shadow-2xl">
+                <!-- NOWE POLA: Spedytor i LEO (Text Input) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="firma" placeholder="Firma / Klient" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-semibold">
-                    <select id="leoCode" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-bold cursor-pointer">
-                        <option value="" disabled selected>Pojazd LEO...</option>
-                    </select>
+                    <input type="text" id="spedytor" placeholder="Spedytor / STOL *" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-semibold">
+                    <input type="text" id="leoCode" placeholder="Pojazd LEO (np. LEO001) *" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-bold uppercase">
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <input type="text" id="firma" placeholder="Firma / Klient (Opcjonalnie - AI wyciągnie z PDF)" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-semibold">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -105,14 +112,12 @@
             </div>
         </section>
 
-        <!-- Ważne: dodano type="button", aby przeglądarka nie próbowała odświeżać strony -->
         <button type="button" onclick="sendToN8n()" id="sendBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-6 rounded-2xl shadow-xl uppercase tracking-[0.2em] text-sm transition-all active:scale-95 flex items-center justify-center gap-3">
             <span id="btnLabel">Wyślij do Agenta AI</span>
         </button>
 
-        <!-- KONSOLA DEBUGOWANIA NA ŻYWO -->
         <div id="debugConsole" class="hidden mt-8 bg-black border border-slate-800 rounded-xl p-4 font-mono text-[10px] text-slate-300 space-y-1 max-h-60 overflow-y-auto">
-            <div class="text-yellow-500 font-bold mb-2">--- LOGI SYSTEMOWE ---</div>
+            <div class="text-yellow-500 font-bold mb-2">--- STATUS SYSTEMU ---</div>
         </div>
 
     </main>
@@ -122,10 +127,8 @@
     </footer>
 
     <script>
-        // LINK TESTOWY ZAINSTALOWANY WEDŁUG ZLECENIA
         const N8N_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook-test/f-ckspedtrans-data';
 
-        // Funkcja do logowania zdarzeń na ekranie
         function logDebug(message, isError = false) {
             const consoleBox = document.getElementById('debugConsole');
             consoleBox.classList.remove('hidden');
@@ -134,12 +137,6 @@
             logEntry.innerText = `> ${message}`;
             consoleBox.appendChild(logEntry);
             consoleBox.scrollTop = consoleBox.scrollHeight;
-        }
-
-        const select = document.getElementById('leoCode');
-        for(let i=1; i<=178; i++) {
-            const code = `LEO${i.toString().padStart(3, '0')}`;
-            select.add(new Option(code, code));
         }
 
         function calcRate() {
@@ -155,7 +152,6 @@
                 live.innerText = `${rate} EUR`;
                 box.classList.remove('hidden');
                 
-                // Progi rentowności z uwzględnieniem dolotów
                 if(rate >= 0.88) { val.className = 'text-xl font-black text-green-400 italic'; live.className = 'text-green-400'; }
                 else if(rate >= 0.77) { val.className = 'text-xl font-black text-blue-400 italic'; live.className = 'text-blue-400'; }
                 else { val.className = 'text-xl font-black text-red-500 italic'; live.className = 'text-red-500'; }
@@ -180,9 +176,25 @@
         document.getElementById('fileInput').onchange = statusUpdate;
 
         async function sendToN8n() {
-            logDebug("1. Rozpoczęto funkcję sendToN8n()");
             const btn = document.getElementById('sendBtn');
             const btnLabel = document.getElementById('btnLabel');
+            const leoInput = document.getElementById('leoCode');
+            const spedInput = document.getElementById('spedytor');
+
+            // Usuwanie poprzednich błędów wizualnych
+            leoInput.classList.remove('error-border');
+            spedInput.classList.remove('error-border');
+
+            // WALIDACJA - Blokada jeśli puste
+            if (!leoInput.value.trim() || !spedInput.value.trim()) {
+                if (!leoInput.value.trim()) leoInput.classList.add('error-border');
+                if (!spedInput.value.trim()) spedInput.classList.add('error-border');
+                
+                logDebug("❌ BŁĄD: Musisz wpisać Pojazd LEO oraz Spedytora!", true);
+                return; // PRZERWANIE FUNKCJI
+            }
+
+            logDebug("1. Walidacja pomyślna. Rozpoczynam wysyłkę...");
             
             try {
                 const cam = document.getElementById('cameraInput').files[0];
@@ -192,54 +204,41 @@
                 btn.classList.add('opacity-50');
                 btnLabel.innerText = 'WYSYŁANIE...';
 
-                logDebug("2. Zbieranie danych formularza...");
                 const fd = new FormData();
-                if(cam) { 
-                    const sizeMB = (cam.size / (1024*1024)).toFixed(2);
-                    fd.append('photo', cam); 
-                    logDebug(`   - Dodano zdjęcie (${sizeMB} MB)`);
-                }
-                if(pdf) { 
-                    fd.append('pdf', pdf); 
-                    logDebug("   - Dodano PDF"); 
-                }
+                if(cam) fd.append('photo', cam);
+                if(pdf) fd.append('pdf', pdf);
                 
+                // Wysyłamy do n8n pod odpowiednimi kluczami
+                fd.append('spedytor', spedInput.value.trim()); // Nowe pole
+                fd.append('leo', leoInput.value.trim().toUpperCase()); // Zawsze duże litery
                 fd.append('firma', document.getElementById('firma').value);
-                fd.append('leo', document.getElementById('leoCode').value);
                 fd.append('kod_start', document.getElementById('kodStart').value);
                 fd.append('kod_koniec', document.getElementById('kodKoniec').value);
                 fd.append('km', document.getElementById('km').value);
                 fd.append('cena', document.getElementById('cena').value);
                 fd.append('timestamp', new Date().toISOString());
 
-                logDebug(`3. Łączenie z URL (TEST MODE): ${N8N_URL}`);
-                logDebug("4. Czekam na odpowiedź serwera...");
+                logDebug(`2. Dane zapakowane. Cel: n8n`);
 
                 const res = await fetch(N8N_URL, { 
                     method: 'POST', 
                     body: fd 
                 });
 
-                logDebug(`5. Odebrano odpowiedź! Status HTTP: ${res.status}`);
-
                 if(res.ok) {
                     btn.classList.replace('bg-blue-600', 'bg-green-600');
                     btnLabel.innerText = 'SUKCES! ODEBRANO';
-                    logDebug("✅ DANE WYSŁANE POMYŚLNIE DO WEBHOOKA TESTOWEGO");
+                    logDebug("✅ DANE WYSŁANE POMYŚLNIE");
                 } else {
-                    const errorMsg = await res.text();
-                    logDebug(`❌ BŁĄD SERWERA: ${errorMsg}`, true);
+                    logDebug(`❌ BŁĄD SERWERA: ${res.status}`, true);
+                    btnLabel.innerText = 'BŁĄD SERWERA';
                 }
             } catch (e) {
-                logDebug(`❌ KRYTYCZNY BŁĄD POŁĄCZENIA: ${e.message}`, true);
-                logDebug("Przeglądarka zabiła zapytanie. Możliwe powody: CORS, zerwanie sieci lub plik zbyt duży dla n8n.", true);
+                logDebug(`❌ KRYTYCZNY BŁĄD: ${e.message}`, true);
+                btnLabel.innerText = 'BŁĄD POŁĄCZENIA';
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50');
-                if(btnLabel.innerText === 'WYSYŁANIE...') {
-                    btnLabel.innerText = 'Wyślij ponownie';
-                }
-                logDebug("Zakończono proces.");
             }
         }
     </script>
