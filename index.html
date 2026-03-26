@@ -25,7 +25,7 @@
 <body class="text-slate-100 min-h-screen pb-10">
 
     <div class="bg-yellow-500 text-[10px] text-center py-1.5 font-bold uppercase tracking-[0.3em] text-black">
-        Tryb Diagnostyczny Uruchomiony (v1.1.9)
+        Tryb Diagnostyczny Uruchomiony (v1.1.9) - LINK TESTOWY n8n
     </div>
 
     <header class="p-4 md:p-6 border-b border-slate-800 sticky top-0 z-50 glass shadow-2xl">
@@ -122,7 +122,8 @@
     </footer>
 
     <script>
-        const N8N_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook/f-ckspedtrans-data';
+        // UWAGA ZMIANA: Dodano "-test" do URL, aby dane były widoczne na żywo w oknie n8n podczas budowania!
+        const N8N_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook-test/f-ckspedtrans-data';
 
         // Funkcja do logowania zdarzeń na ekranie
         function logDebug(message, isError = false) {
@@ -154,7 +155,7 @@
                 live.innerText = `${rate} EUR`;
                 box.classList.remove('hidden');
                 
-                // Progi rentowności: 0.77 (3.5t) / 0.88 (7.5t)
+                // Progi rentowności z uwzględnieniem dolotów
                 if(rate >= 0.88) { val.className = 'text-xl font-black text-green-400 italic'; live.className = 'text-green-400'; }
                 else if(rate >= 0.77) { val.className = 'text-xl font-black text-blue-400 italic'; live.className = 'text-blue-400'; }
                 else { val.className = 'text-xl font-black text-red-500 italic'; live.className = 'text-red-500'; }
@@ -224,7 +225,7 @@
                 if(res.ok) {
                     btn.classList.replace('bg-blue-600', 'bg-green-600');
                     btnLabel.innerText = 'SUKCES! ODEBRANO';
-                    logDebug("✅ DANE WYSŁANE POMYŚLNIE");
+                    logDebug("✅ DANE WYSŁANE POMYŚLNIE DO WEBHOOKA TESTOWEGO");
                 } else {
                     const errorMsg = await res.text();
                     logDebug(`❌ BŁĄD SERWERA: ${errorMsg}`, true);
