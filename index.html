@@ -3,116 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>F$CKSPEDTRANS v1.1.18</title>
+    <title>LEO-TRANS Order Manager v1.2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #020617;
+            background-color: #0f1115; /* Ciemny, głęboki szary, bardziej profesjonalny niż czysty czarny */
             -webkit-tap-highlight-color: transparent;
         }
         .glass {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(24, 28, 36, 0.85);
+            backdrop-filter: blur(12px);
         }
+        /* Zmiana poświaty z niebieskiej na pomarańczową */
         .input-glow:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            border-color: #f97316; 
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
         }
         .error-border {
             border-color: #ef4444 !important;
-            background: rgba(239, 68, 68, 0.1) !important;
+            background: rgba(239, 68, 68, 0.05) !important;
         }
         #debugConsole::-webkit-scrollbar {
             width: 4px;
         }
         #debugConsole::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #2d3748;
             border-radius: 10px;
+        }
+        /* Efekt dla wgranego pliku */
+        .file-active {
+            border-color: #f97316 !important;
+            background: rgba(249, 115, 22, 0.05);
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen pb-10">
+<body class="text-slate-200 min-h-screen pb-10">
 
-    <div class="bg-blue-600 text-[10px] text-center py-2 font-bold uppercase tracking-[0.4em] text-white shadow-lg sticky top-0 z-[60]">
-        LEO-TRANS LOGISTICS | DEBUG CONSOLE v1.1.18
+    <div class="bg-gradient-to-r from-orange-600 to-orange-500 text-[10px] text-center py-2 font-black uppercase tracking-[0.4em] text-white shadow-md sticky top-0 z-[60]">
+        LEO-TRANS LOGISTICS | SYSTEM CORE v1.2.0
     </div>
 
-    <header class="p-6 border-b border-slate-800 glass shadow-2xl">
+    <header class="p-6 border-b border-slate-800 glass shadow-xl">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold tracking-tighter text-blue-500 uppercase italic">
-                F$CKSPED<span class="text-white">TRANS</span>
+            <h1 class="text-2xl font-black tracking-tight text-orange-500 uppercase">
+                LEO-TRANS <span class="text-slate-100 font-medium tracking-normal">Order Manager</span>
             </h1>
-            <div id="rateDisplay" class="bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 font-mono text-xs flex items-center gap-2">
-                <span class="text-slate-500 font-bold">RATE:</span>
-                <span id="liveRate" class="text-blue-400">--</span>
+            <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 font-mono text-[10px] flex items-center gap-2 text-slate-400 uppercase tracking-widest">
+                Status: <span class="text-green-400 font-bold flex items-center gap-1"><span class="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span> ONLINE</span>
             </div>
         </div>
     </header>
 
     <main class="max-w-4xl mx-auto p-4 md:p-8 space-y-6">
         
-        <!-- SEKCJA: IDENTYFIKACJA -->
         <section class="space-y-4">
-            <div class="bg-slate-900 border border-blue-500/30 p-6 rounded-3xl space-y-5 shadow-2xl">
+            <div class="bg-[#181c24] border border-slate-800 p-6 rounded-2xl space-y-5 shadow-lg">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="space-y-2">
-                        <label class="text-[10px] uppercase font-black text-blue-400 ml-1">Spedytor / STOL *</label>
-                        <input type="text" id="input_spedytor" placeholder="Twoje inicjały..." class="w-full bg-slate-950 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-bold text-lg">
+                        <label class="text-[10px] uppercase font-bold text-slate-400 ml-1 tracking-wider">Spedytor / STOL <span class="text-orange-500">*</span></label>
+                        <input type="text" id="input_spedytor" placeholder="Twoje inicjały..." class="w-full bg-[#0f1115] border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-bold text-lg transition-colors">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] uppercase font-black text-blue-300 ml-1">Pojazd LEO *</label>
-                        <input type="text" id="input_leo" placeholder="np. LEO045..." class="w-full bg-slate-950 border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-black text-lg uppercase">
+                        <label class="text-[10px] uppercase font-bold text-slate-400 ml-1 tracking-wider">Pojazd LEO <span class="text-orange-500">*</span></label>
+                        <input type="text" id="input_leo" placeholder="np. LEO045..." class="w-full bg-[#0f1115] border border-slate-700 p-4 rounded-xl outline-none input-glow text-white font-black text-lg uppercase transition-colors">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEKCJA: PLIKI -->
-        <section class="grid grid-cols-2 gap-4">
-            <div class="relative group h-32 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center hover:border-blue-500 transition-all active:scale-95 shadow-lg">
-                <input type="file" id="cameraInput" accept="image/*" capture="environment" class="absolute inset-0 opacity-0 z-20">
-                <div id="cameraIcon" class="text-3xl mb-1">📸</div>
-                <p class="text-[10px] font-black uppercase text-slate-500">Zrób Zdjęcie</p>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div id="dropzone" class="relative group h-32 bg-[#181c24] border-2 border-dashed border-slate-700 rounded-2xl flex flex-col items-center justify-center hover:border-orange-500 hover:bg-[#1c202a] transition-all cursor-pointer shadow-lg">
+                <input type="file" id="fileInput" accept="application/pdf,image/*" class="absolute inset-0 opacity-0 z-20 cursor-pointer">
+                <div id="fileIcon" class="text-3xl mb-2 transition-transform group-hover:scale-110">📄</div>
+                <p id="fileNameLabel" class="text-xs font-bold uppercase text-slate-400 tracking-wider text-center px-4 truncate w-full">Zalącz plik zlecenia (PDF)</p>
             </div>
-            <div class="relative group h-32 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center hover:border-blue-500 transition-all active:scale-95 shadow-lg">
-                <input type="file" id="fileInput" accept="image/*,application/pdf" class="absolute inset-0 opacity-0 z-20">
-                <div id="fileIcon" class="text-3xl mb-1">📄</div>
-                <p class="text-[10px] font-black uppercase text-slate-500">Dodaj PDF</p>
-            </div>
-        </section>
 
-        <!-- SEKCJA: FINANSE -->
-        <section class="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl space-y-6">
-            <div class="grid grid-cols-2 gap-5">
+            <div class="relative h-32 bg-[#181c24] border border-slate-800 rounded-2xl flex flex-col justify-center p-6 shadow-lg">
+                <label class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">Dystans</label>
                 <div class="relative">
-                    <input type="number" id="km" placeholder="KM" oninput="calcRate()" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl font-black outline-none input-glow text-blue-400 text-xl">
-                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-600 font-bold uppercase">Km</span>
-                </div>
-                <div class="relative">
-                    <input type="number" id="cena" placeholder="CENA" oninput="calcRate()" class="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl font-black outline-none input-glow text-green-400 text-xl">
-                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-600 font-bold uppercase">Eur</span>
+                    <input type="number" id="km" placeholder="0" class="w-full bg-[#0f1115] border border-slate-700 p-4 rounded-xl font-black outline-none input-glow text-slate-200 text-xl transition-colors">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] text-slate-500 font-bold uppercase">KM</span>
                 </div>
             </div>
-            <div id="rateBox" class="hidden p-5 rounded-2xl bg-black/60 flex justify-between items-center border border-slate-800">
-                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Stawka rzeczywista:</span>
-                <span id="rateValue" class="text-2xl font-black italic tracking-tighter">--</span>
-            </div>
+
         </section>
 
-        <button type="button" onclick="sendToN8n()" id="sendBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-7 rounded-2xl shadow-2xl uppercase tracking-[0.3em] text-sm transition-all active:scale-95 flex items-center justify-center gap-4">
-            <span id="btnLabel">Zatwierdź i Wyślij</span>
+        <button type="button" onclick="sendToN8n()" id="sendBtn" class="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-black py-6 rounded-2xl shadow-[0_0_20px_rgba(249,115,22,0.2)] uppercase tracking-[0.2em] text-sm transition-all active:scale-95 flex items-center justify-center gap-4 mt-4">
+            <span id="btnLabel">Procesuj Zlecenie</span>
         </button>
 
-        <!-- KONSOLA LOGÓW (Wróciła) -->
-        <div class="space-y-2">
+        <div class="space-y-2 mt-8">
             <div class="flex justify-between items-center px-2">
-                <span class="text-[10px] font-black uppercase text-slate-500 tracking-widest">System Logs</span>
-                <span id="statusIndicator" class="h-2 w-2 rounded-full bg-slate-800"></span>
+                <span class="text-[10px] font-bold uppercase text-slate-500 tracking-widest">Dziennik Operacji</span>
+                <span id="statusIndicator" class="h-2 w-2 rounded-full bg-slate-700"></span>
             </div>
-            <div id="debugConsole" class="bg-black border border-slate-800 rounded-2xl p-5 font-mono text-[10px] text-slate-400 space-y-1 h-48 overflow-y-auto shadow-inner">
-                <div class="text-blue-500 font-bold opacity-50">SYSTEM INITIALIZED v1.1.18...</div>
+            <div id="debugConsole" class="bg-[#0b0c0f] border border-slate-800/50 rounded-2xl p-5 font-mono text-[10px] text-slate-400 space-y-1 h-40 overflow-y-auto shadow-inner">
+                <div class="text-orange-500 font-bold opacity-70">> SYSTEM INITIALIZED v1.2.0...</div>
+                <div class="text-slate-600">> Oczekiwanie na dane zlecenia...</div>
             </div>
         </div>
 
@@ -121,39 +111,32 @@
     <script>
         const BASE_N8N_URL = 'https://ireneuszkalinowski13.app.n8n.cloud/webhook-test/f-ckspedtrans-data';
 
+        // Nasłuchiwanie na zmianę pliku - ładny bajer UX
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const label = document.getElementById('fileNameLabel');
+            const dropzone = document.getElementById('dropzone');
+            
+            if (e.target.files.length > 0) {
+                label.innerText = e.target.files[0].name;
+                label.classList.replace('text-slate-400', 'text-orange-400');
+                dropzone.classList.add('file-active');
+            } else {
+                label.innerText = 'Załącz plik zlecenia (PDF)';
+                label.classList.replace('text-orange-400', 'text-slate-400');
+                dropzone.classList.remove('file-active');
+            }
+        });
+
         function logDebug(msg, isError = false) {
             const consoleBox = document.getElementById('debugConsole');
             const logEntry = document.createElement('div');
-            logEntry.className = isError ? 'text-red-500 font-bold border-l-2 border-red-500 pl-2 my-1' : 'text-green-400 border-l-2 border-green-500 pl-2 my-1';
+            logEntry.className = isError ? 'text-red-400 font-bold border-l-2 border-red-500 pl-2 my-1.5' : 'text-slate-300 border-l-2 border-orange-500 pl-2 my-1.5';
             
             const time = new Date().toLocaleTimeString('pl-PL');
-            logEntry.innerHTML = `<span class="text-slate-700">[${time}]</span> ${msg}`;
+            logEntry.innerHTML = `<span class="text-slate-600">[${time}]</span> ${msg}`;
             
             consoleBox.appendChild(logEntry);
             consoleBox.scrollTop = consoleBox.scrollHeight;
-        }
-
-        function calcRate() {
-            const km = parseFloat(document.getElementById('km').value);
-            const cena = parseFloat(document.getElementById('cena').value);
-            const val = document.getElementById('rateValue');
-            const live = document.getElementById('liveRate');
-            const box = document.getElementById('rateBox');
-            
-            if(km > 0 && cena > 0) {
-                const r = (cena / km).toFixed(2);
-                val.innerText = `${r} EUR/KM`;
-                live.innerText = `${r} EUR`;
-                box.classList.remove('hidden');
-                
-                // Progi rentowności: 3.5t (0.77), 7.5t (0.88)
-                if(r >= 0.88) { val.className = 'text-2xl font-black text-green-400 italic'; live.className = 'text-green-400'; }
-                else if(r >= 0.77) { val.className = 'text-2xl font-black text-blue-400 italic'; live.className = 'text-blue-400'; }
-                else { val.className = 'text-2xl font-black text-red-500 italic'; live.className = 'text-red-500'; }
-            } else { 
-                box.classList.add('hidden'); 
-                live.innerText = '--';
-            }
         }
 
         async function sendToN8n() {
@@ -169,66 +152,74 @@
             if (!leoVal || !spedVal) {
                 if(!leoVal) document.getElementById('input_leo').classList.add('error-border');
                 if(!spedVal) document.getElementById('input_spedytor').classList.add('error-border');
-                logDebug("BŁĄD WALIDACJI: Pola obowiązkowe są puste!", true);
+                logDebug("BŁĄD: Pola Spedytor i LEO są obowiązkowe!", true);
                 return;
             }
 
             try {
                 btn.disabled = true;
-                btn.classList.add('opacity-50');
-                label.innerText = 'WYSYŁANIE...';
-                status.className = 'h-2 w-2 rounded-full bg-yellow-500 animate-pulse';
+                btn.classList.add('opacity-70');
+                label.innerText = 'PRZETWARZANIE...';
+                status.className = 'h-2 w-2 rounded-full bg-orange-500 animate-pulse';
 
-                logDebug("1. Przygotowywanie paczki danych...");
+                logDebug("1. Inicjalizacja transferu danych...");
 
-                // Budowanie URL z Query Parametrami (Dane wyciągnięte osobno)
                 const finalUrl = `${BASE_N8N_URL}?leo=${encodeURIComponent(leoVal.toUpperCase())}&spedytor=${encodeURIComponent(spedVal)}`;
-                logDebug(`2. Wygenerowano URL: ${finalUrl}`);
                 
                 const fd = new FormData();
-                const cam = document.getElementById('cameraInput').files[0];
                 const pdf = document.getElementById('fileInput').files[0];
                 
-                if(cam) {
-                    fd.append('photo', cam);
-                    logDebug(`   - Dodano zdjęcie (${(cam.size/1024/1024).toFixed(2)} MB)`);
-                }
                 if(pdf) {
                     fd.append('pdf', pdf);
-                    logDebug("   - Dodano plik PDF");
+                    logDebug(`   - Załączono dokument: ${pdf.name}`);
+                } else {
+                    logDebug("   - UWAGA: Brak załączonego pliku PDF", true);
                 }
                 
-                fd.append('km', document.getElementById('km').value);
-                fd.append('cena', document.getElementById('cena').value);
+                const kmValue = document.getElementById('km').value;
+                fd.append('km', kmValue);
+                if(kmValue) logDebug(`   - Zadeklarowano dystans: ${kmValue} KM`);
+                
                 fd.append('timestamp', new Date().toISOString());
 
-                logDebug("3. Nawiązywanie połączenia z agentem n8n...");
+                logDebug("2. Transmisja do agenta AI...");
 
                 const res = await fetch(finalUrl, { 
                     method: 'POST', 
                     body: fd 
                 });
 
-                logDebug(`4. Serwer odpowiedział kodem: ${res.status}`);
-
                 if(res.ok) {
-                    btn.classList.replace('bg-blue-600', 'bg-green-600');
-                    label.innerText = 'WYŚLIJ KOLEJNY';
-                    status.className = 'h-2 w-2 rounded-full bg-green-500';
-                    logDebug("✅ SUKCES: Dane dostarczone pomyślnie!");
+                    btn.classList.replace('from-orange-600', 'from-green-600');
+                    btn.classList.replace('to-orange-500', 'to-green-500');
+                    label.innerText = 'ZLECENIE WYSŁANE';
+                    status.className = 'h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]';
+                    logDebug("✅ SUKCES: Zlecenie zostało przeanalizowane i dodane do bazy!");
+                    
+                    // Reset po 3 sekundach
+                    setTimeout(() => {
+                        btn.classList.replace('from-green-600', 'from-orange-600');
+                        btn.classList.replace('to-green-500', 'to-orange-500');
+                        label.innerText = 'PROCESUJ KOLEJNE';
+                        document.getElementById('fileInput').value = '';
+                        document.getElementById('km').value = '';
+                        document.getElementById('fileNameLabel').innerText = 'Załącz plik zlecenia (PDF)';
+                        document.getElementById('dropzone').classList.remove('file-active');
+                    }, 3000);
+
                 } else {
                     const errText = await res.text();
-                    logDebug(`❌ BŁĄD SERWERA: ${errText || res.statusText}`, true);
-                    status.className = 'h-2 w-2 rounded-full bg-red-500';
-                    label.innerText = 'BŁĄD SERWERA';
+                    logDebug(`❌ BŁĄD SERWERA: ${res.status} - ${errText || 'Odmowa dostępu'}`, true);
+                    status.className = 'h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]';
+                    label.innerText = 'BŁĄD ODRZUCENIA';
                 }
             } catch (e) {
-                logDebug(`❌ BŁĄD SIECI: ${e.message}`, true);
-                status.className = 'h-2 w-2 rounded-full bg-red-500';
+                logDebug(`❌ BŁĄD SIECI: Brak odpowiedzi od webhooka.`, true);
+                status.className = 'h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]';
                 label.innerText = 'BŁĄD POŁĄCZENIA';
             } finally {
                 btn.disabled = false;
-                btn.classList.remove('opacity-50');
+                btn.classList.remove('opacity-70');
             }
         }
     </script>
